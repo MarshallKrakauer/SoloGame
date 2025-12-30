@@ -14,4 +14,4 @@ class Player:
             self.is_alive = False
 
     def __str__(self):
-        return str(self.health) + str(self.is_alive)
+        return str(self.health) + '\n' + str(self.is_alive)
