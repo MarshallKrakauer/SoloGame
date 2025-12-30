@@ -19,7 +19,6 @@ class Card:
             self.is_alive = False
             self.health = 0
             if self.active_side == self.front_side:
-                print("does it do the swtich side")
                 self.switch_side()
 
     def revive_card(self):

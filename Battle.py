@@ -11,8 +11,8 @@ class Battle:
         opponent_side: CardSide = opponent_card.active_side
         self.player_side = player_side
         self.opponent_side = opponent_side
-        self.apply_player_damage = False
-        self.apply_opponent_damage = False
+        self.player_hit_successful = False
+        self.opponent_hit_successful = False
         self.player_character = player_character
         #variable_name: Type = initial_value
 
@@ -27,7 +27,6 @@ class Battle:
             or player_attack_type == 'G' and opponent_attack_type == 'C'):
             return 'player'
         else:
-            print('confirm opponent victory')
             return 'opponent'
 
     def apply_speed(self):
@@ -38,20 +37,22 @@ class Battle:
         elif player_speed > opponent_speed:
             return 'player'
         else:
+            print("confirming opponent speed advantage")
             return 'opponent'
 
     def apply_power(self, speed_advantage='equal'):
         opponent_power = self.opponent_side.attack_power
         player_power = self.player_side.attack_power
+        print(opponent_power, player_power)
         if speed_advantage == 'equal':
-            self.apply_player_damage = player_power >= opponent_power
-            self.apply_opponent_damage = opponent_power >= player_power
+            self.player_hit_successful = player_power >= opponent_power
+            self.opponent_hit_successful = opponent_power >= player_power
         elif speed_advantage == 'opponent':
-            self.apply_player_damage = player_power > opponent_power
-            self.apply_opponent_damage = opponent_power >= player_power
+            self.player_hit_successful = player_power > opponent_power
+            self.opponent_hit_successful = opponent_power >= player_power
         else:
-            self.apply_player_damage = player_power >= opponent_power
-            self.apply_opponent_damage = opponent_power > player_power
+            self.player_hit_successful = player_power >= opponent_power
+            self.opponent_hit_successful = opponent_power > player_power
 
     def apply_damage(self, damage_receiver='player'):
         if damage_receiver == 'player':
@@ -64,18 +65,21 @@ class Battle:
         # Apply Rock-Paper-Scissors
         rps_result = self.apply_rock_paper_scissors()
         if rps_result == 'player':
-            self.apply_opponent_damage = True
+            self.opponent_hit_successful = True
         elif rps_result == 'opponent':
-            self.apply_player_damage = True
+            self.player_hit_successful = True
         else:
             speed_result = self.apply_speed()
+            #print('SPEED RESULT:', speed_result)
             self.apply_power(speed_result)
 
-        if self.apply_opponent_damage:
-            self.apply_damage('opponent')
-
-        if self.apply_player_damage:
+        if self.opponent_hit_successful:
+            print("is opponent getting damage?")
             self.apply_damage('player')
+
+        if self.player_hit_successful:
+            print("is player getting damage")
+            self.apply_damage('opponent')
 
 if __name__ == "__main__":
     player_one = Player(10, [],[],[],[])
